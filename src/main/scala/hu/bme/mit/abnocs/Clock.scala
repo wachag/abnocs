@@ -10,25 +10,24 @@ class Clock extends Actor {
 
   def receive = {
     case AddNOCObject(obj) => items = obj::items
-    case Start() => {
-      println("Ticking!")
+    case Start() =>
+      //  println("Ticking!")
+      for (item <- items) item ! Start()
       for (item <- items) item ! Tick()
       context.become(WaitTock(items.length))
-    }
   }
 
   def WaitTock(tocksToWait: Int): Receive = {
-    case Tock() => {
+    case Tock() =>
       if (tocksToWait > 1) {
-        println("Tock")
+      //  println("Tock")
         context.become(WaitTock(tocksToWait - 1))
       }
       else {
-        println("Tock")
-        println("Ticking!")
+        //println("Tock")
+        //println("Ticking!")
         for (item <- items) item ! Tick()
         context.become(WaitTock(items.length))
       }
-    }
   }
 }
