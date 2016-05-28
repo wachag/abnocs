@@ -11,9 +11,11 @@ class NOC extends NOCObject(List()) {
       val router2 = context.actorOf(Props(new Router(List())), name = "router2")
       println("Start4");
       val clk = context.actorOf(Props[Clock], name = "clock")
+      val cpu=context.actorOf(Props(new CPU(router2)), name = "cpu")
       println("Start5");
       clk ! AddNOCObject(router1)
       clk ! AddNOCObject(router2)
+      clk ! AddNOCObject(cpu)
       clk ! Start()
 
     }
