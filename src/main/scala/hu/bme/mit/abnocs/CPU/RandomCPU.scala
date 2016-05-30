@@ -1,7 +1,6 @@
 package hu.bme.mit.abnocs.CPU
 
 import akka.actor.{ActorContext, ActorRef, Props}
-import hu.bme.mit.abnocs.Router.Router
 import hu.bme.mit.abnocs.{AddNOCObject, NOCMsg, RoutableMessage}
 
 import scala.util.Random
@@ -31,12 +30,10 @@ trait RandomDestinationProcessor extends CPU {
       case Some(msg) => Some(msg)
       case _ => None
     }
-
   }
 }
 
 trait RandomProbabilityProcessor extends CPU {
-  //  val numCPUs: Int = 9
   val messageProbability: Double = 0.1
 
   override def generateMessage(): Option[NOCMsg] = {
