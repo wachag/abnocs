@@ -1,6 +1,8 @@
 package hu.bme.mit.abnocs
 
 import akka.actor._
+import hu.bme.mit.abnocs.Router.RingRouter
+import hu.bme.mit.abnocs.CPU.CPU
 
 class NOC extends NOCObject() {
 

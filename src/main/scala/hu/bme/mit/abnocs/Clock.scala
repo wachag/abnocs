@@ -9,9 +9,10 @@ class Clock extends Actor {
   private var items: List[ActorRef] = List()
 
   def receive = {
-    case AddNOCObject(obj) => items = obj::items
+    case AddNOCObject(obj) =>
+      println("Adding "+obj.toString())
+      items = obj::items
     case Start() =>
-      //  println("Ticking!")
       for (item <- items) item ! Start()
       for (item <- items) item ! Tick()
       context.become(WaitTock(items.length))

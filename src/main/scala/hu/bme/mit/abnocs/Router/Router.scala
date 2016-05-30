@@ -1,10 +1,19 @@
-package hu.bme.mit.abnocs
+package hu.bme.mit.abnocs.Router
 
 import akka.actor._
+import hu.bme.mit.abnocs._
 
 import scala.collection.immutable.HashMap
+import scala.util.Random
 
-abstract class Router(routerid: Int) extends NOCObject() {
+trait RouterGenerator {
+  def generateRouter(context: ActorContext, id: Int): ActorRef = {
+    val router0: ActorRef = context.actorOf(Props(new Router(id)), name = "router" + id)
+    router0
+  }
+}
+
+class Router(routerid: Int) extends NOCObject() {
   var processor: ActorRef = null
   val routerId: Int = routerid
   var routeMap: Map[Int, ActorRef] = new HashMap[Int, ActorRef]()
@@ -25,14 +34,17 @@ abstract class Router(routerid: Int) extends NOCObject() {
         if (routeMap contains where) {
           routeMap(where) ! RoutableMessage(dest, msg)
         }
-        else{
+        else {
           println("Dropping message\n")
         }
       }
     case Tick() =>
-      //      println("Tick in " + self.path.name + "!")
       sender ! Tock()
   }
 
-  def route(id: Int): Int
+  /* Random route*/
+  def route(id: Int): Int = {
+    val rand = Random.nextInt(routeMap.keys.size)
+    routeMap.keys.toList(rand)
+  }
 }
