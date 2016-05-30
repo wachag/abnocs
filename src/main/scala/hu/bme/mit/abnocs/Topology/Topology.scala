@@ -11,9 +11,9 @@ abstract class Topology extends NOCObject {
 
   def generateTopology(): Unit
 
-  def generateRouter(context: ActorContext, id:Int): ActorRef
+  def generateRouter(id: Int): ActorRef
 
-  def generateCPU(context: ActorContext, router: ActorRef): ActorRef
+  def generateCPU(router: ActorRef): ActorRef
 
   def addSimObject(obj: ActorRef): Unit = {
     simObjects = simObjects :+ obj

@@ -10,7 +10,9 @@ import scala.util.Random
   */
 
 trait CPUGenerator {
-  def generateCPU(context: ActorContext, router: ActorRef): ActorRef = {
+  val context: ActorContext
+
+  def generateCPU(router: ActorRef): ActorRef = {
     val cpu0: ActorRef = context.actorOf(Props(new CPU(router)))
     cpu0 ! AddNOCObject(router)
     router ! AddNOCObject(cpu0)
@@ -29,21 +31,23 @@ class CPU(rout: ActorRef) extends NOCObject() {
     case AddNOCObject(routr) => this.router = routr
   }
 
+  def generateMessage(): Option[NOCMsg] = {
+    if (tickCount == 0) {
+      val i: Int = (Random.nextInt())
+      println("Sending message to " + i)
+      return Option(RoutableMessage(i, "hello"))
+    }
+    return None
+  }
+
   def generateTraffic: Receive = {
     case RoutableMessage(dest, msg) =>
       println(tickCount + ": " + msg + " to " + dest + " arrived")
-    //context.system.terminate()
-
     case Tick() =>
       tickCount += 1
-      if (tickCount % 10 == 8) {
-        val i: Int = (Random.nextInt() % 3 + 3) % 3
-        println("Sending message to " + i)
-        router ! RoutableMessage(i % 3, "hello")
-      }
-      if (tickCount % 100 == 88) context.system.terminate()
+      generateMessage() foreach (msg => {
+        router ! msg
+      })
       sender() ! Tock()
-
   }
-
 }

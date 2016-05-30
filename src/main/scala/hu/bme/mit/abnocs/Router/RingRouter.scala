@@ -9,7 +9,8 @@ import hu.bme.mit.abnocs.Router
 
 trait RingRouterGenerator {
   val ringSize: Int = 9
-  def generateRouter(context: ActorContext, id: Int): ActorRef = {
+  val context: ActorContext
+  def generateRouter(id: Int): ActorRef = {
     val router0: ActorRef = context.actorOf(Props(new RingRouter(id,ringSize)), name = "router" + id)
     router0
   }

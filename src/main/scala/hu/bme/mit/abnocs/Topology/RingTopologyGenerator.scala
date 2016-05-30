@@ -14,8 +14,8 @@ trait RingTopologyGenerator extends Topology {
     var i: Int = 0
     var routers: List[ActorRef] = List()
     for (i <- 0 until ringSize) {
-      val nrouter: ActorRef = generateRouter(context, i)
-      val nCPU: ActorRef = generateCPU(context, nrouter)
+      val nrouter: ActorRef = generateRouter(i)
+      val nCPU: ActorRef = generateCPU(nrouter)
 
       routers = routers :+ nrouter
       addSimObject(nrouter)

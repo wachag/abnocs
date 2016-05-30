@@ -7,7 +7,8 @@ import scala.collection.immutable.HashMap
 import scala.util.Random
 
 trait RouterGenerator {
-  def generateRouter(context: ActorContext, id: Int): ActorRef = {
+  val context:ActorContext
+  def generateRouter(id: Int): ActorRef = {
     val router0: ActorRef = context.actorOf(Props(new Router(id)), name = "router" + id)
     router0
   }
