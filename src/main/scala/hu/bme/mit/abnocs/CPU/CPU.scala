@@ -31,14 +31,7 @@ class CPU(rout: ActorRef) extends NOCObject() {
     case AddNOCObject(routr) => this.router = routr
   }
 
-  def generateMessage(): Option[NOCMsg] = {
-    if (tickCount == 0) {
-      val i: Int = (Random.nextInt())
-      println("Sending message to " + i)
-      return Option(RoutableMessage(i, "hello"))
-    }
-    return None
-  }
+  def generateMessage(): Option[NOCMsg] = None
 
   def generateTraffic: Receive = {
     case RoutableMessage(dest, msg) =>
