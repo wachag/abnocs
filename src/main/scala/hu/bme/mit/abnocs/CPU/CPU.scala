@@ -35,7 +35,7 @@ class CPU(rout: ActorRef) extends NOCObject() {
 
   def generateTraffic: Receive = {
     case RoutableMessage(dest, msg) =>
-      println(tickCount + ": " + msg + " to " + dest + " arrived")
+    //  println(tickCount + ": " + msg + " to " + dest + " arrived")
     case Tick() =>
       tickCount += 1
       generateMessage() foreach (msg => {

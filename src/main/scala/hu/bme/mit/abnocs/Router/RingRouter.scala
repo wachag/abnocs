@@ -21,7 +21,7 @@ trait RingRoute extends Router {
   val ringSize: Int = 9
 
   override def route(id: Int): Int = {
-    println("Ring "+ringSize+ " Route from " + routerId + " to " + id + " via "+ (routerId + 1) % ringSize)
+  //  println("Ring "+ringSize+ " Route from " + routerId + " to " + id + " via "+ (routerId + 1) % ringSize)
     (routerId + 1) % ringSize
   }
 }
