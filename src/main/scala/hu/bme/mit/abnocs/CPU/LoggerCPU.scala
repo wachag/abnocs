@@ -7,7 +7,7 @@ import hu.bme.mit.abnocs.NOCMsg
   * Created by wachag on 2016.05.30..
   */
 trait LoggerCPU extends CPU {
-  val logger:ActorSelection = context.actorSelection("/user/noc1/logger")
+  val logger:ActorSelection = context.actorSelection("/user/logger")
 
   override def generateMessage(): Option[NOCMsg] = {
     val tmp: Option[NOCMsg] = super.generateMessage()

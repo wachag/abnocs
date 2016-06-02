@@ -35,12 +35,12 @@ trait RandomDestinationProcessor extends CPU {
 
 trait RandomMessageProcessor extends CPU {
   val numCPUs: Int = 9
+  val toCPU: Int = 0
 
   override def generateMessage(): Option[NOCMsg] = {
     super.generateMessage() match {
       case Some(msg) => Some(msg) /* we forward sane messages */
-      case None => Some(RoutableMessage(0,"hello")) /* we generate a message on every cycle */
-      case _ => Some(RoutableMessage(0,"hello"))
+      case _ => Some(RoutableMessage(toCPU, "hello")) /* we generate a message on every cycle */
     }
   }
 }
