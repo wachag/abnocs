@@ -23,7 +23,12 @@ trait RingTopologyGenerator extends Topology {
     }
     for (i <- 0 until ringSize) {
       val nid = (i + 1) % ringSize
-      routers(i) ! AddRoute(nid, routers(nid))
+      val buffer1= generateBuffer(routers(i),routers(nid))
+      val buffer2= generateBuffer(routers(nid),routers(i))
+      addSimObject(buffer1)
+      addSimObject(buffer2)
+      routers(i) ! AddRoute(nid, buffer2)
+      routers(nid) ! AddRoute(i, buffer1)
     }
 
   }

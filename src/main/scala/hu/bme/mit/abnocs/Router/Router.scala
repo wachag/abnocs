@@ -14,11 +14,28 @@ trait RouterGenerator {
   }
 }
 
+/**
+  * An abstract router implementation
+  *
+  * A router handles messages sent from other routers or from a processor, or a FIFO buffer.
+  *
+  * @param routerid the unique identifier of the router (and its CPU) in the NoC.
+  *                 If the destination of the message handled is this id, it will be sent to the processor instead of a router.
+  */
 class Router(routerid: Int) extends NOCObject() {
+  /** The processor the router is associated with */
   var processor: ActorRef = null
   val routerId: Int = routerid
 
-  def addRoute(id: Int, obj: ActorRef):Unit = {}
+  /**
+    * Adds a connection between the router and an NoC actor
+    *
+    * Each router implementation can fill its routing table according to addRoute
+    *
+    * @param id  the id of the NoC actor
+    * @param obj the reference for the Actor
+    */
+  def addRoute(id: Int, obj: ActorRef): Unit = {}
 
   def receive: Actor.Receive = {
     case AddNOCObject(obj) =>
@@ -28,6 +45,8 @@ class Router(routerid: Int) extends NOCObject() {
     case Start() => context.become(routing)
   }
 
+  def handleBuffer(msg: NOCMsg): Unit = {}
+
   def routing: Actor.Receive = {
     case RoutableMessage(dest, msg) =>
       if (dest == routerid) processor ! RoutableMessage(dest, msg)
@@ -36,6 +55,8 @@ class Router(routerid: Int) extends NOCObject() {
           x ! RoutableMessage(dest, msg)
         })
       }
+    case msg@Full() => handleBuffer(msg)
+    case msg@NotFull() => handleBuffer(msg)
     case Tick() =>
       sender ! Tock()
   }
@@ -44,10 +65,8 @@ class Router(routerid: Int) extends NOCObject() {
 
   def routeToRouter(id: Option[Int]): Option[ActorRef] = None
 
-  /*{
-    val rand = Random.nextInt(routeMap.keys.size)
-    routeMap.keys.toList(rand)
-  }*/
+  def backRoute(output: ActorRef): Option[ActorRef] = None
+
 }
 
 

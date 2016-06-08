@@ -30,6 +30,6 @@ trait RingRoute extends Router {
   }
 }
 
-class RingRouter(id: Int, size: Int) extends Router(id) with SingleVCRouter with RingRoute with LoggerRouter{
+class RingRouter(id: Int, size: Int) extends Router(id) with SingleVCRouter with RingRoute {
   override val ringSize: Int = size
 }

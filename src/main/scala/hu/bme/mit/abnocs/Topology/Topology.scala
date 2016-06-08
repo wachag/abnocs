@@ -10,7 +10,7 @@ abstract class Topology extends NOCObject {
   var simObjects: List[ActorRef] = List()
 
   def generateTopology(): Unit
-
+  def generateBuffer(reader: ActorRef, writer:ActorRef):ActorRef
   def generateRouter(id: Int): ActorRef
 
   def generateCPU(router: ActorRef): ActorRef
