@@ -20,12 +20,16 @@ trait RingRouterGenerator {
 trait RingRoute extends Router {
   val ringSize: Int = 9
 
-  override def route(id: Int): Int = {
-  //  println("Ring "+ringSize+ " Route from " + routerId + " to " + id + " via "+ (routerId + 1) % ringSize)
+  /*override def route(id: Int): Int = {
+    super.route(id)
     (routerId + 1) % ringSize
+  }*/
+  override def routePath(id: Int): Option[Int] = {
+    super.routePath(id)
+    Some((routerId + 1) % ringSize)
   }
 }
 
-class RingRouter(id: Int, size: Int) extends Router(id) with RingRoute {
+class RingRouter(id: Int, size: Int) extends Router(id) with SingleVCRouter with RingRoute with LoggerRouter{
   override val ringSize: Int = size
 }

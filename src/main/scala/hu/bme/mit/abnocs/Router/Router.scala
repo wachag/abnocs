@@ -4,10 +4,10 @@ import akka.actor._
 import hu.bme.mit.abnocs._
 
 import scala.collection.immutable.HashMap
-import scala.util.Random
 
 trait RouterGenerator {
-  val context:ActorContext
+  val context: ActorContext
+
   def generateRouter(id: Int): ActorRef = {
     val router0: ActorRef = context.actorOf(Props(new Router(id)), name = "router" + id)
     router0
@@ -17,13 +17,14 @@ trait RouterGenerator {
 class Router(routerid: Int) extends NOCObject() {
   var processor: ActorRef = null
   val routerId: Int = routerid
-  var routeMap: Map[Int, ActorRef] = new HashMap[Int, ActorRef]()
+
+  def addRoute(id: Int, obj: ActorRef):Unit = {}
 
   def receive: Actor.Receive = {
     case AddNOCObject(obj) =>
       processor = obj
       processor ! AddNOCObject(self)
-    case AddRoute(id, obj) => routeMap = routeMap + (id -> obj);
+    case AddRoute(id, obj) => addRoute(id, obj)
     case Start() => context.become(routing)
   }
 
@@ -31,21 +32,31 @@ class Router(routerid: Int) extends NOCObject() {
     case RoutableMessage(dest, msg) =>
       if (dest == routerid) processor ! RoutableMessage(dest, msg)
       else {
-        val where = route(dest)
-        if (routeMap contains where) {
-          routeMap(where) ! RoutableMessage(dest, msg)
-        }
-        else {
-          println("Dropping message\n")
-        }
+        routeToRouter(routePath(dest)) foreach (x => {
+          x ! RoutableMessage(dest, msg)
+        })
       }
     case Tick() =>
       sender ! Tock()
   }
 
-  /* Random route*/
-  def route(id: Int): Int = {
+  def routePath(id: Int): Option[Int] = None
+
+  def routeToRouter(id: Option[Int]): Option[ActorRef] = None
+
+  /*{
     val rand = Random.nextInt(routeMap.keys.size)
     routeMap.keys.toList(rand)
-  }
+  }*/
 }
+
+trait SingleVCRouter extends Router {
+  var routeMap: Map[Int, ActorRef] = new HashMap[Int, ActorRef]()
+
+  override def addRoute(id: Int, obj: ActorRef): Unit = {
+    routeMap = routeMap + (id -> obj)
+  }
+  override def routeToRouter(id: Option[Int]): Option[ActorRef] = id.flatMap(routeMap.get)
+}
+
+

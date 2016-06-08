@@ -18,7 +18,7 @@ class GUIActor(data: DefaultCategoryDataset) extends Actor {
   override def receive: Receive = {
     case Tick() => clockCount = clockCount + 1
       sender ! Tock()
-    case RoutableMessage(dest, msg) => {
+    case RoutableMessage(dest, msg) =>
       var x: Number = 0
       msgCount=msgCount+1
       try {
@@ -27,8 +27,7 @@ class GUIActor(data: DefaultCategoryDataset) extends Actor {
         case e: UnknownKeyException => x = 0
       }
       data.setValue(x.intValue() + 1, "X", dest)
-      println(msgCount.toDouble/clockCount.toDouble+ " messages arrived per clock")
-    }
-
+      // println(msgCount.toDouble/clockCount.toDouble+ " messages arrived per clock")
+    case msg=>println(msg)
   }
 }

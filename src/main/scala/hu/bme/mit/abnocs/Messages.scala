@@ -14,7 +14,11 @@ case class Tock() extends NOCMsg
 
 case class RoutableMessage(dest: Int, payload: String) extends NOCMsg
 
-case class Flit(dest: Int, channel: Int, valid: Boolean, tail: Boolean, data: Int) extends NOCMsg
+case class Flit(dest: Int, channel: Int, head: Boolean, tail: Boolean, data: Int) extends NOCMsg
 
-case class AddRoute(id: Int, router: ActorRef)
+case class AddRoute(id: Int, router: ActorRef) extends NOCMsg
 
+case class Full() extends NOCMsg
+case class NotFull() extends NOCMsg
+
+case class Empty() extends NOCMsg
