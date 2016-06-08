@@ -50,13 +50,5 @@ class Router(routerid: Int) extends NOCObject() {
   }*/
 }
 
-trait SingleVCRouter extends Router {
-  var routeMap: Map[Int, ActorRef] = new HashMap[Int, ActorRef]()
-
-  override def addRoute(id: Int, obj: ActorRef): Unit = {
-    routeMap = routeMap + (id -> obj)
-  }
-  override def routeToRouter(id: Option[Int]): Option[ActorRef] = id.flatMap(routeMap.get)
-}
 
 
