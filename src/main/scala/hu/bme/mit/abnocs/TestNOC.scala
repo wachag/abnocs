@@ -5,10 +5,12 @@ import hu.bme.mit.abnocs.Router.RingRouterGenerator
 import hu.bme.mit.abnocs.CPU._
 import hu.bme.mit.abnocs.FIFO.SimpleBufferGenerator
 import hu.bme.mit.abnocs.Topology._
-class TestNOC extends Topology with RingTopologyGenerator with RingRouterGenerator with RandomCPUGenerator with SimpleBufferGenerator{
-  override val ringSize: Int = 1000
-  override val numCPUs:Int=ringSize
-  override val messageProbability:Double=0.001
+
+class TestNOC extends Topology with RingTopologyGenerator with RingRouterGenerator with RandomCPUGenerator with SimpleBufferGenerator {
+  override val ringSize: Int = 10
+  override val numCPUs: Int = ringSize
+  override val messageProbability: Double = 0.001
+
   override def receive: Actor.Receive = {
     case AddNOCObject(x) => addSimObject(x)
     case Start() =>
@@ -19,8 +21,15 @@ class TestNOC extends Topology with RingTopologyGenerator with RingRouterGenerat
           clk ! AddNOCObject(x)
         }
       }
+      simObjects.foreach((x: ActorRef) => {
+        x ! DiscoveryRequest()
+      })
       clk ! Start()
     case Tick() =>
       sender ! Tock()
+    case DiscoveryResponse(l: List[ActorRef]) =>
+      l.foreach((x: ActorRef) => {
+        println(sender().path.name+" -> "+x.path.name+" ;")
+      })
   }
 }

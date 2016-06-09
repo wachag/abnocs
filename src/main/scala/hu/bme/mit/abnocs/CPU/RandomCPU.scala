@@ -12,8 +12,8 @@ trait RandomCPUGenerator {
   val context: ActorContext
   val messageProbability: Double
 
-  def generateCPU(router: ActorRef): ActorRef = {
-    val cpu0: ActorRef = context.actorOf(Props(new RandomCPU(router, numCPUs, messageProbability)))
+  def generateCPU(id:Int,router: ActorRef): ActorRef = {
+    val cpu0: ActorRef = context.actorOf(Props(new RandomCPU(router, numCPUs, messageProbability)),"CPU"+id)
     cpu0 ! AddNOCObject(router)
     router ! AddNOCObject(cpu0)
     cpu0

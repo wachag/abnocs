@@ -22,3 +22,6 @@ case class Full() extends NOCMsg
 case class NotFull() extends NOCMsg
 
 case class Empty() extends NOCMsg
+
+case class DiscoveryRequest() extends NOCMsg
+case class DiscoveryResponse(neighbours:List[ActorRef]) extends NOCMsg

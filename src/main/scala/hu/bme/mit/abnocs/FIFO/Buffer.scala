@@ -9,6 +9,7 @@ import hu.bme.mit.abnocs.{NotFull, Tick, Tock, _}
 class Buffer(reader: ActorRef, writer: ActorRef) extends NOCObject {
   override def receive: Receive = {
     case Start() => context.become(operation)
+    case DiscoveryRequest() => sender() ! DiscoveryResponse(discovery)
   }
 
   def enqueue(msg: NOCMsg): Unit = {}
@@ -22,6 +23,10 @@ class Buffer(reader: ActorRef, writer: ActorRef) extends NOCObject {
       })
       sender() ! Tock()
     case msg : RoutableMessage => enqueue(msg)
+  }
+
+  override def discovery: List[ActorRef] = {
+    super.discovery++List(reader)
   }
 }
 
@@ -40,8 +45,8 @@ trait SimpleBuffer extends Buffer {
 trait SimpleBufferGenerator {
   val context: ActorContext
 
-  def generateBuffer(reader: ActorRef, writer: ActorRef): ActorRef = {
-    val buffer: ActorRef = context.actorOf(Props(new Buffer(reader, writer) with SimpleBuffer))
+  def generateBuffer(id:Int,reader: ActorRef, writer: ActorRef): ActorRef = {
+    val buffer: ActorRef = context.actorOf(Props(new Buffer(reader, writer) with SimpleBuffer), "buffer"+id)
     buffer
   }
 }

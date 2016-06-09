@@ -12,8 +12,8 @@ import scala.util.Random
 trait CPUGenerator {
   val context: ActorContext
 
-  def generateCPU(router: ActorRef): ActorRef = {
-    val cpu0: ActorRef = context.actorOf(Props(new CPU(router)))
+  def generateCPU(id:Int, router: ActorRef): ActorRef = {
+    val cpu0: ActorRef = context.actorOf(Props(new CPU(router)),"CPU"+id)
     cpu0 ! AddNOCObject(router)
     router ! AddNOCObject(cpu0)
     cpu0
@@ -25,10 +25,12 @@ class CPU(rout: ActorRef) extends NOCObject() {
   var tickCount: Int = 0
   var router: ActorRef = rout
 
+  override def discovery=super.discovery++List(router)
 
   def receive: Receive = {
     case Start() => context.become(generateTraffic)
     case AddNOCObject(routr) => this.router = routr
+    case DiscoveryRequest() => sender()!DiscoveryResponse(discovery)
   }
 
   def generateMessage(): Option[NOCMsg] = None

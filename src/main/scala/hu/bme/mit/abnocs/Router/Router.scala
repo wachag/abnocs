@@ -42,7 +42,9 @@ class Router(routerid: Int) extends NOCObject() {
       processor = obj
       processor ! AddNOCObject(self)
     case AddRoute(id, obj) => addRoute(id, obj)
+    case DiscoveryRequest() => sender()!DiscoveryResponse(discovery)
     case Start() => context.become(routing)
+
   }
 
   def handleBuffer(msg: NOCMsg): Unit = {}
@@ -67,6 +69,7 @@ class Router(routerid: Int) extends NOCObject() {
 
   def backRoute(output: ActorRef): Option[ActorRef] = None
 
+  override def discovery: List[ActorRef] = super.discovery ++ List(processor)
 }
 
 

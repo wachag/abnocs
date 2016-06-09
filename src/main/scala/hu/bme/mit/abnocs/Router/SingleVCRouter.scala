@@ -14,4 +14,6 @@ trait SingleVCRouter extends Router {
     routeMap = routeMap + (id -> obj)
   }
   override def routeToRouter(id: Option[Int]): Option[ActorRef] = id.flatMap(routeMap.get)
+
+  override def discovery:List[ActorRef]=routeMap.values.toList++super.discovery
 }
