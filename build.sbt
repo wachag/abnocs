@@ -11,3 +11,5 @@ libraryDependencies ++=  Seq(
 //libraryDependencies += "org.scalafx" %% "scalafx" % "8.0.92-R10"
 libraryDependencies += "org.jfree" % "jfreechart" % "1.0.14"
 libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "1.0.1"
+libraryDependencies += "org.graphstream" % "gs-core" % "1.3"
+libraryDependencies += "org.graphstream" % "gs-ui" % "1.3"

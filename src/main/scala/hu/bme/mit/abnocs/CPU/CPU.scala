@@ -13,7 +13,7 @@ trait CPUGenerator {
   val context: ActorContext
 
   def generateCPU(id:Int, router: ActorRef): ActorRef = {
-    val cpu0: ActorRef = context.actorOf(Props(new CPU(router)),"CPU"+id)
+    val cpu0: ActorRef = context.actorOf(Props(new CPU(router,id)),"CPU"+id)
     cpu0 ! AddNOCObject(router)
     router ! AddNOCObject(cpu0)
     cpu0
@@ -21,10 +21,10 @@ trait CPUGenerator {
 }
 
 
-class CPU(rout: ActorRef) extends NOCObject() {
+class CPU(rout: ActorRef,id:Int) extends NOCObject() {
   var tickCount: Int = 0
   var router: ActorRef = rout
-
+  val cpuId:Int=id
   override def discovery=super.discovery++List(router)
 
   def receive: Receive = {
@@ -34,10 +34,10 @@ class CPU(rout: ActorRef) extends NOCObject() {
   }
 
   def generateMessage(): Option[NOCMsg] = None
-
+  def handleMessage(m: NOCMsg):Unit={}
   def generateTraffic: Receive = {
-    case RoutableMessage(dest, msg) =>
-    //  println(tickCount + ": " + msg + " to " + dest + " arrived")
+    case m:RoutableMessage => handleMessage(m)
+    case m:Flit=> handleMessage(m)
     case Tick() =>
       tickCount += 1
       generateMessage() foreach (msg => {

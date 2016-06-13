@@ -12,9 +12,9 @@ case class Tick() extends NOCMsg
 
 case class Tock() extends NOCMsg
 
-case class RoutableMessage(dest: Int, payload: String) extends NOCMsg
+case class RoutableMessage(source: Int, dest: Int, payload: String) extends NOCMsg
 
-case class Flit(dest: Int, channel: Int, head: Boolean, tail: Boolean, data: Int) extends NOCMsg
+case class Flit(source: Int, dest: Int ,channel: Int, head: Boolean, tail: Boolean, data: Char) extends NOCMsg
 
 case class AddRoute(id: Int, router: ActorRef) extends NOCMsg
 
@@ -25,3 +25,5 @@ case class Empty() extends NOCMsg
 
 case class DiscoveryRequest() extends NOCMsg
 case class DiscoveryResponse(neighbours:List[ActorRef]) extends NOCMsg
+
+case class AddEdge(start:ActorRef,end:ActorRef) extends NOCMsg

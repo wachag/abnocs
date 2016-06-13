@@ -50,11 +50,18 @@ class Router(routerid: Int) extends NOCObject() {
   def handleBuffer(msg: NOCMsg): Unit = {}
 
   def routing: Actor.Receive = {
-    case RoutableMessage(dest, msg) =>
-      if (dest == routerid) processor ! RoutableMessage(dest, msg)
+    case RoutableMessage(source,dest, msg) =>
+      if (dest == routerid) processor ! RoutableMessage(source,dest, msg)
       else {
         routeToRouter(routePath(dest)) foreach (x => {
-          x ! RoutableMessage(dest, msg)
+          x ! RoutableMessage(source,dest, msg)
+        })
+      }
+    case Flit(source,dest,channel,head,tail,data) =>
+      if (dest == routerid) processor ! Flit(source,dest, channel,head,tail,data)
+      else {
+        routeToRouter(routePath(dest)) foreach (x => {
+          x ! Flit(source,dest, channel,head,tail,data)
         })
       }
     case msg@Full() => handleBuffer(msg)

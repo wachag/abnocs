@@ -1,14 +1,12 @@
 package hu.bme.mit.abnocs.Router
 
 import akka.actor.{ActorRef, ActorSelection}
-import hu.bme.mit.abnocs.AddRoute
+import hu.bme.mit.abnocs.{AddRoute, Logging}
 
 /**
   * Created by wachag on 2016.06.08..
   */
-trait LoggerRouter extends Router {
-  val logger: ActorSelection = context.actorSelection("/user/logger")
-
+trait LoggerRouter extends Router with Logging{
 
   override def addRoute(id: Int, obj: ActorRef): Unit = {
     super.addRoute(id, obj)

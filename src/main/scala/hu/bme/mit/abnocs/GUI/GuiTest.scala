@@ -1,8 +1,8 @@
 package hu.bme.mit.abnocs.GUI
 
 import akka.actor.{ActorSystem, Props}
-import hu.bme.mit.abnocs.Logger.Logger
 import hu.bme.mit.abnocs.{AddNOCObject, Start, TestNOC}
+import org.graphstream.graph.implementations.MultiGraph
 import org.jfree.chart.{ChartFactory, ChartPanel}
 import org.jfree.data.category.DefaultCategoryDataset
 import org.jfree.chart.plot.PlotOrientation
@@ -51,28 +51,30 @@ object GuiTest extends SimpleSwingApplication {
   def top = new MainFrame {
     title = "NoC tester"
     val data = new DefaultCategoryDataset
+    val g=new MultiGraph("Topology")
+    val viewer = g.display(true)
+    val view = viewer.addDefaultView(false)
+
     contents = new GridPanel(2, 2) {
-      hGap = 3
-      vGap = 3
+      hGap = 0
+      vGap = 0
       val X = "X"
-
-
-
       val chart = ChartFactory.createLineChart(
-        "Messages", "CPU#", "Messages received",
+        "NoC messages", "CPU#", "Messages received",
         data, PlotOrientation.VERTICAL,
         true, true, true)
       contents += Component.wrap(new ChartPanel(chart))
       contents += new Label {
         text = "0"
       }
-      contents += new Button {
+/*      contents += new Button {
         text = "Press Me!"
-      }
+      }*/
+      contents += Component.wrap(view)
     }
-    size = new Dimension(300, 80)
+    size = new Dimension(1024, 768)
     val system = ActorSystem("ABNOCS")
-    val logger = system.actorOf(Props(new GUIActor(data)), name = "logger")
+    val logger = system.actorOf(Props(new GUIActor(data,g)), name = "logger")
     println(logger.path)
     val NOC = system.actorOf(Props[TestNOC], name = "noc1")
     NOC ! AddNOCObject(logger)
