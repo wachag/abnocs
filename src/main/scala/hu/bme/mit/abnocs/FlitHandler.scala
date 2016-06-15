@@ -9,7 +9,7 @@ trait FlitHandler {
     msg match {
       case RoutableMessage(source, dest, payload) =>
         flitList = flitList :+ Flit(dest, source, 0, head = true, tail = false, payload.head)
-        payload.tail.init.foreach(b => {
+        payload.drop(1).dropRight(1).foreach(b => {
           flitList = flitList :+ Flit(dest, source, 0, head = false, tail = false, b)
         })
         flitList = flitList :+ Flit(dest, source, 0, head = false, tail = true, payload.last)

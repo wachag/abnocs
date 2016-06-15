@@ -36,11 +36,12 @@ trait RandomDestinationProcessor extends CPU {
 trait RandomMessageProcessor extends CPU {
   val numCPUs: Int = 9
   val toCPU: Int = 0
+  val maxLength: Int=16
 
   override def generateMessage(): Option[NOCMsg] = {
     super.generateMessage() match {
       case Some(msg) => Some(msg) /* we forward sane messages */
-      case _ => Some(RoutableMessage(cpuId,toCPU, "hello")) /* we generate a message on every cycle */
+      case _ => Some(RoutableMessage(cpuId,toCPU, Random.nextString(Random.nextInt(maxLength)+1))) /* we generate a message on every cycle */
     }
   }
 }
@@ -60,7 +61,7 @@ trait RandomProbabilityProcessor extends CPU {
   }
 }
 
-class RandomCPU(router: ActorRef, id:Int,nCPUs: Int, msgProb: Double) extends CPU(router,id) with RandomMessageProcessor with RandomDestinationProcessor with RandomProbabilityProcessor with LoggerCPU with FlitMessageCPU{
+class RandomCPU(router: ActorRef, id:Int,nCPUs: Int, msgProb: Double) extends CPU(router,id) with RandomMessageProcessor with RandomDestinationProcessor with RandomProbabilityProcessor with FlitMessageCPU with LoggerCPU{
   override val numCPUs: Int = nCPUs
   override val messageProbability: Double = msgProb
 }

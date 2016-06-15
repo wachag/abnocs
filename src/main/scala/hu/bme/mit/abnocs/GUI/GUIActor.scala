@@ -18,18 +18,23 @@ class GUIActor(data: DefaultCategoryDataset, g: Graph) extends Actor {
   g.setStrict(false)
   g.setAutoCreate(true)
 
+  def increaseValue(value: String, dest: Int, inc: Int) = {
+    try {
+      data.incrementValue(inc, value, dest)
+    } catch {
+      case e: UnknownKeyException => data.addValue(inc, value, dest)
+    }
+
+  }
+
   override def receive: Receive = {
     case Tick() => clockCount = clockCount + 1
       sender ! Tock()
-    case RoutableMessage(source,dest, msg) =>
-      var x: Number = 0
+    case RoutableMessage(source, dest, msg) =>
       msgCount = msgCount + 1
-      try {
-        data.incrementValue(1, "X", dest)
-      } catch {
-        case e: UnknownKeyException => data.addValue(1, "X", dest)
-      }
-    case m:Flit => //println("fl"+sender.path.name+m)
+      increaseValue("Complete messages", dest, msg.length())
+    case m: Flit =>
+      increaseValue("Flit", m.dest, 1)
     case AddEdge(s: ActorRef, e: ActorRef) => g.addEdge(s.path.name + e.path.name, s.path.name, e.path.name)
     case msg => println(msg)
 
