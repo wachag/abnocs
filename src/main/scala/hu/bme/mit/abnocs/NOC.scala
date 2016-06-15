@@ -29,7 +29,6 @@ class NOC extends NOCObject() {
       clk ! AddNOCObject(cpu0)
       clk ! Start()
     case Tick() =>
-      println("Tick!")
       sender ! Tock()
   }
 }

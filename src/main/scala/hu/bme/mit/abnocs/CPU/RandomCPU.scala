@@ -12,8 +12,8 @@ trait RandomCPUGenerator {
   val context: ActorContext
   val messageProbability: Double
 
-  def generateCPU(id:Int,router: ActorRef): ActorRef = {
-    val cpu0: ActorRef = context.actorOf(Props(new RandomCPU(router, id,numCPUs, messageProbability)),"CPU"+id)
+  def generateCPU(id: Int, router: ActorRef): ActorRef = {
+    val cpu0: ActorRef = context.actorOf(Props(new RandomCPU(router, id, numCPUs, messageProbability)), "CPU" + id)
     cpu0 ! AddNOCObject(router)
     router ! AddNOCObject(cpu0)
     cpu0
@@ -26,7 +26,7 @@ trait RandomDestinationProcessor extends CPU {
   override def generateMessage(): Option[NOCMsg] = {
     super.generateMessage() match {
       case None => None
-      case Some(RoutableMessage(source,dest, msg)) => Some(RoutableMessage(source,Random.nextInt(numCPUs), msg))
+      case Some(RoutableMessage(source, dest, msg)) => Some(RoutableMessage(source, Random.nextInt(numCPUs), msg))
       case Some(msg) => Some(msg)
       case _ => None
     }
@@ -36,12 +36,12 @@ trait RandomDestinationProcessor extends CPU {
 trait RandomMessageProcessor extends CPU {
   val numCPUs: Int = 9
   val toCPU: Int = 0
-  val maxLength: Int=16
+  val maxLength: Int = 16
 
   override def generateMessage(): Option[NOCMsg] = {
     super.generateMessage() match {
       case Some(msg) => Some(msg) /* we forward sane messages */
-      case _ => Some(RoutableMessage(cpuId,toCPU, Random.nextString(Random.nextInt(maxLength)+1))) /* we generate a message on every cycle */
+      case _ => Some(RoutableMessage(cpuId, toCPU, Random.alphanumeric.take(Random.nextInt(maxLength) + 1).toString())) /* we generate a message on every cycle */
     }
   }
 }
@@ -61,7 +61,7 @@ trait RandomProbabilityProcessor extends CPU {
   }
 }
 
-class RandomCPU(router: ActorRef, id:Int,nCPUs: Int, msgProb: Double) extends CPU(router,id) with RandomMessageProcessor with RandomDestinationProcessor with RandomProbabilityProcessor with FlitMessageCPU with LoggerCPU{
+class RandomCPU(router: ActorRef, id: Int, nCPUs: Int, msgProb: Double) extends CPU(router, id) with RandomMessageProcessor with RandomDestinationProcessor with RandomProbabilityProcessor with FlitMessageCPU with LoggerCPU {
   override val numCPUs: Int = nCPUs
   override val messageProbability: Double = msgProb
 }

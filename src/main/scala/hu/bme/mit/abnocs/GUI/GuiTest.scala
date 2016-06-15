@@ -77,7 +77,7 @@ object GuiTest extends SimpleSwingApplication {
     val logger = system.actorOf(Props(new GUIActor(data,g)), name = "logger")
     println(logger.path)
     val NOC = system.actorOf(Props[TestNOC], name = "noc1")
-    NOC ! AddNOCObject(logger)
+    //NOC ! AddNOCObject(logger)
     NOC ! Start()
   }
 }

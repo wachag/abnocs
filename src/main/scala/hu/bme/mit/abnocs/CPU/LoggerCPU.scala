@@ -10,7 +10,6 @@ trait LoggerCPU extends CPU with Logging {
 
   override def handleMessage(m: NOCMsg): Unit = {
     super.handleMessage(m)
-    println(m)
     logger ! m
   }
 
