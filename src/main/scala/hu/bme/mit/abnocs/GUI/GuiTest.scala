@@ -54,6 +54,8 @@ object GuiTest extends SimpleSwingApplication {
     val g=new MultiGraph("Topology")
     val viewer = g.display(true)
     val view = viewer.addDefaultView(false)
+    g.setStrict(false)
+    g.setAutoCreate(true)
 
     contents = new GridPanel(2, 2) {
       hGap = 0
@@ -74,7 +76,7 @@ object GuiTest extends SimpleSwingApplication {
     }
     size = new Dimension(1024, 768)
     val system = ActorSystem("ABNOCS")
-    val logger = system.actorOf(Props(new GUIActor(data,g)), name = "logger")
+    val logger = system.actorOf(Props(new GActor(data,g)), name = "logger")
     println(logger.path)
     val NOC = system.actorOf(Props[TestNOC], name = "noc1")
     //NOC ! AddNOCObject(logger)

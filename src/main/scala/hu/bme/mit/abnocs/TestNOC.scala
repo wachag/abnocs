@@ -7,7 +7,7 @@ import hu.bme.mit.abnocs.CPU._
 import hu.bme.mit.abnocs.Topology._
 
 class TestNOC extends Topology with RingTopologyGenerator with RingRouterGenerator with RandomCPUGenerator with FifoBufferGenerator {
-  override val ringSize: Int = 300
+  override val ringSize: Int = 10
   override val numCPUs: Int = ringSize
   override val messageProbability: Double = 0.01
   val logger:ActorSelection = context.actorSelection("/user/logger")

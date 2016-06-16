@@ -2,7 +2,9 @@ package hu.bme.mit.abnocs.GUI
 
 import akka.actor.{Actor, ActorRef}
 import akka.actor.Actor.Receive
+import hu.bme.mit.abnocs.Database.DatabaseLogger
 import hu.bme.mit.abnocs._
+import hu.bme.mit.abnocs.Logger.Logger
 import org.graphstream.graph.Graph
 import org.jfree.data.UnknownKeyException
 import org.jfree.data.category.DefaultCategoryDataset
@@ -13,12 +15,13 @@ import scala.util.Random
 /**
   * Created by wachag on 2016.06.02..
   */
-class GUIActor(data: DefaultCategoryDataset, g: Graph) extends Actor {
+trait GUIActor extends Logger {
   var msgCount: Int = 0
-  var clockCount: Int = 0
   var nocObjects: List[Int] = List()
-  g.setStrict(false)
-  g.setAutoCreate(true)
+  val data: DefaultCategoryDataset
+  val g: Graph
+
+
 
   def increaseValue(value: String, dest: Int, inc: Int) = {
     try {
@@ -39,20 +42,34 @@ class GUIActor(data: DefaultCategoryDataset, g: Graph) extends Actor {
     }
   }
 
-  override def receive: Receive = {
-    case Tick() => clockCount = clockCount + 1
-      updateClockedValues("Transfer rate: flit/tick")
-    case RoutableMessage(source, dest, msg) =>
-      msgCount = msgCount + 1
-      increaseValue("Complete messages", dest, msg.length())
-    case m: Flit =>
-//      increaseValue("Flit", m.dest, 1)
-      nocObjects = nocObjects.updated(m.dest,nocObjects(m.dest)+1)
-    case AddEdge(s: ActorRef, e: ActorRef) => g.addEdge(s.path.name + e.path.name, s.path.name, e.path.name)
-    case AddNOCObject(obj: ActorRef) => println(obj.path.name)
-      if(obj.path.name.contains("CPU"))
-      nocObjects = nocObjects :+ 0
-    case msg => println(msg)
+  override def log(msg:NOCMsg):NOCMsg = {
+    val mesg=super.log(msg)
 
+    mesg match{
+
+      case Tick() => updateClockedValues("Transfer rate: flit/tick")
+      case RoutableMessage(source, dest, mg) =>
+        msgCount = msgCount + 1
+        increaseValue("Complete messages", dest, mg.length())
+      case f: Flit =>
+        //      increaseValue("Flit", f.dest, 1)
+        nocObjects = nocObjects.updated(f.dest,nocObjects(f.dest)+1)
+      case AddEdge(s: ActorRef, e: ActorRef) =>
+        g.addEdge(s.path.name +
+          e.path.name,
+          s.path.name,
+          e.path.name)
+        Unit
+      case AddNOCObject(obj: ActorRef) => println(obj.path.name)
+        if(obj.path.name.contains("CPU"))
+          nocObjects = nocObjects :+ 0
+      case m => println(m)
+    }
+    mesg
   }
+}
+
+class GActor (dataA: DefaultCategoryDataset, gA: Graph) extends Logger with GUIActor with DatabaseLogger{
+  override val data: DefaultCategoryDataset = dataA
+  override val g: Graph = gA
 }
