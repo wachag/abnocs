@@ -1,6 +1,7 @@
 package hu.bme.mit.abnocs.CPU
 
 import akka.actor.{ActorContext, ActorRef, Props}
+import hu.bme.mit.abnocs.Common._
 import hu.bme.mit.abnocs._
 
 import scala.util.Random
@@ -41,8 +42,8 @@ class CPU(rout: ActorRef,id:Int) extends NOCObject() {
     case Tick() =>
       tickCount += 1
       generateMessage() foreach (msg => {
-        router ! msg
+        sender ! WorkItem(router, msg)
       })
-      sender() ! Tock()
+      sender ! Tock()
   }
 }

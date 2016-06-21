@@ -1,4 +1,4 @@
-package hu.bme.mit.abnocs
+package hu.bme.mit.abnocs.Common
 
 import akka.actor.ActorRef
 
@@ -27,3 +27,5 @@ case class DiscoveryRequest() extends NOCMsg
 case class DiscoveryResponse(neighbours:List[ActorRef]) extends NOCMsg
 
 case class AddEdge(start:ActorRef,end:ActorRef) extends NOCMsg
+
+case class WorkItem(to: ActorRef, what: NOCMsg)

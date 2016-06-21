@@ -1,6 +1,6 @@
 package hu.bme.mit.abnocs.Database
+import hu.bme.mit.abnocs.Common.{Flit, NOCMsg, RoutableMessage}
 import hu.bme.mit.abnocs.Logger._
-import hu.bme.mit.abnocs.{Flit, NOCMsg, RoutableMessage, Tick}
 import slick.driver.PostgresDriver.api._
 import slick.jdbc.meta.MTable
 

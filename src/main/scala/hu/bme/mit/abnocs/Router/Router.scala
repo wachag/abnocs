@@ -1,6 +1,7 @@
 package hu.bme.mit.abnocs.Router
 
 import akka.actor._
+import hu.bme.mit.abnocs.Common._
 import hu.bme.mit.abnocs._
 
 import scala.collection.immutable.HashMap
@@ -22,7 +23,7 @@ trait RouterGenerator {
   * @param routerid the unique identifier of the router (and its CPU) in the NoC.
   *                 If the destination of the message handled is this id, it will be sent to the processor instead of a router.
   */
-class Router(routerid: Int) extends NOCObject() {
+class Router(routerid: Int) extends NOCObject() with Deferrable {
   /** The processor the router is associated with */
   var processor: ActorRef = null
   val routerId: Int = routerid
@@ -54,19 +55,20 @@ class Router(routerid: Int) extends NOCObject() {
       if (dest == routerid) processor ! RoutableMessage(source,dest, msg)
       else {
         routeToRouter(routePath(dest)) foreach (x => {
-          x ! RoutableMessage(source,dest, msg)
+          defer(WorkItem(x,RoutableMessage(source,dest, msg)))
         })
       }
     case Flit(source,dest,channel,head,tail,data) =>
       if (dest == routerid) processor ! Flit(source,dest, channel,head,tail,data)
       else {
         routeToRouter(routePath(dest)) foreach (x => {
-          x ! Flit(source,dest, channel,head,tail,data)
+          defer(WorkItem(x,Flit(source,dest, channel,head,tail,data)))
         })
       }
     case msg@Full() => handleBuffer(msg)
     case msg@NotFull() => handleBuffer(msg)
     case Tick() =>
+      executeDeferred(sender())
       sender ! Tock()
   }
 

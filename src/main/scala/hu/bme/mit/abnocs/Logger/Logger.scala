@@ -2,7 +2,7 @@ package hu.bme.mit.abnocs.Logger
 
 import akka.actor.Actor
 import akka.actor.Actor.Receive
-import hu.bme.mit.abnocs.{NOCMsg, Tick}
+import hu.bme.mit.abnocs.Common.{NOCMsg, Tick}
 
 
 /**

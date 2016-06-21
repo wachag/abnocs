@@ -1,7 +1,8 @@
 package hu.bme.mit.abnocs.Router
 
 import akka.actor.{ActorRef, ActorSelection}
-import hu.bme.mit.abnocs.{AddRoute, Logging}
+import hu.bme.mit.abnocs.Common.AddRoute
+import hu.bme.mit.abnocs.Logger.Logging
 
 /**
   * Created by wachag on 2016.06.08..

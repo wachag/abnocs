@@ -1,4 +1,4 @@
-package hu.bme.mit.abnocs
+package hu.bme.mit.abnocs.Logger
 
 import akka.actor.{Actor, ActorSelection}
 

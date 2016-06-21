@@ -1,4 +1,5 @@
-package hu.bme.mit.abnocs
+package hu.bme.mit.abnocs.Common
+
 
 /**
   * Created by wachag on 2016.06.13..

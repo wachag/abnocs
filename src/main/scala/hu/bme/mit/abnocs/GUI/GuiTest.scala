@@ -1,7 +1,8 @@
 package hu.bme.mit.abnocs.GUI
 
 import akka.actor.{ActorSystem, Props}
-import hu.bme.mit.abnocs.{AddNOCObject, Start, TestNOC}
+import hu.bme.mit.abnocs.Common.Start
+import hu.bme.mit.abnocs.TestNOC
 import org.graphstream.graph.implementations.MultiGraph
 import org.jfree.chart.{ChartFactory, ChartPanel}
 import org.jfree.data.category.DefaultCategoryDataset
@@ -79,7 +80,6 @@ object GuiTest extends SimpleSwingApplication {
     val logger = system.actorOf(Props(new GActor(data,g)), name = "logger")
     println(logger.path)
     val NOC = system.actorOf(Props[TestNOC], name = "noc1")
-    //NOC ! AddNOCObject(logger)
     NOC ! Start()
   }
 }

@@ -1,7 +1,7 @@
 package hu.bme.mit.abnocs.Buffer
 
 import akka.actor.{ActorContext, ActorRef, Props}
-import hu.bme.mit.abnocs.{Tick, Tock, _}
+import hu.bme.mit.abnocs.Common._
 
 /**
   * Created by wachag on 2016.06.08..
@@ -23,7 +23,7 @@ class Buffer(reader: ActorRef, writer: ActorRef) extends NOCObject {
   def operation: Receive = {
     case Tick() =>
       getMessageHead.foreach(m => {
-        reader ! m
+        sender ! WorkItem(reader, m)
       })
       sender() ! Tock()
     case msg: RoutableMessage => enqueue(msg)

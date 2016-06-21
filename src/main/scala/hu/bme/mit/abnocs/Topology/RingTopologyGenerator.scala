@@ -1,7 +1,7 @@
 package hu.bme.mit.abnocs.Topology
 
 import akka.actor.{ActorContext, ActorRef}
-import hu.bme.mit.abnocs.AddRoute
+import hu.bme.mit.abnocs.Common.AddRoute
 
 /**
   * Created by wachag on 2016.05.30..

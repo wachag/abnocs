@@ -1,7 +1,8 @@
 package hu.bme.mit.abnocs.CPU
 
 import akka.actor.{ActorRef, ActorSelection}
-import hu.bme.mit.abnocs.{Logging, NOCMsg}
+import hu.bme.mit.abnocs.Common.NOCMsg
+import hu.bme.mit.abnocs.Logger.Logging
 
 /**
   * Created by wachag on 2016.05.30..

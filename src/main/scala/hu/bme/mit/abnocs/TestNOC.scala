@@ -4,19 +4,20 @@ import akka.actor._
 import hu.bme.mit.abnocs.Buffer.{FifoBufferGenerator, SimpleBufferGenerator}
 import hu.bme.mit.abnocs.Router.RingRouterGenerator
 import hu.bme.mit.abnocs.CPU._
+import hu.bme.mit.abnocs.Common._
 import hu.bme.mit.abnocs.Topology._
 
 class TestNOC extends Topology with RingTopologyGenerator with RingRouterGenerator with RandomCPUGenerator with FifoBufferGenerator {
-  override val ringSize: Int = 10
+  override val ringSize: Int = 20
   override val numCPUs: Int = ringSize
-  override val messageProbability: Double = 0.01
+  override val messageProbability: Double = 0.0001
   val logger:ActorSelection = context.actorSelection("/user/logger")
 
   override def receive: Actor.Receive = {
     case AddNOCObject(x) => addSimObject(x)
     case Start() =>
       generateTopology()
-      val clk = context.actorOf(Props[Clock], name = "clock")
+      val clk = context.actorOf(Props[Simulator], name = "clock")
       simObjects.foreach {
         (x: ActorRef) => {
           clk ! AddNOCObject(x)

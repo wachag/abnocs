@@ -1,6 +1,6 @@
 package hu.bme.mit.abnocs.CPU
 
-import hu.bme.mit.abnocs.{Flit, FlitHandler, NOCMsg, RoutableMessage}
+import hu.bme.mit.abnocs.Common.{Flit, FlitHandler, NOCMsg, RoutableMessage}
 
 import scala.collection.immutable.HashMap
 
@@ -18,6 +18,7 @@ trait FlitMessageCPU extends CPU with FlitHandler {
         case f: Flit => outGoingFlitList = outGoingFlitList :+ f
         case msg: RoutableMessage =>
           outGoingFlitList = outGoingFlitList ++ routeableMessageToFlitList(msg)
+        case _=>
       }
     })
 
@@ -52,6 +53,7 @@ trait FlitMessageCPU extends CPU with FlitHandler {
           super.handleMessage(RoutableMessage(src, dest, s))
           inComingflitMap = inComingflitMap - src
         }
+      case _ =>
     }
   }
 

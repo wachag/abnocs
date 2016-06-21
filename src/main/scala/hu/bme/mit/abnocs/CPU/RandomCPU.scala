@@ -1,7 +1,8 @@
 package hu.bme.mit.abnocs.CPU
 
 import akka.actor.{ActorContext, ActorRef, Props}
-import hu.bme.mit.abnocs.{AddNOCObject, NOCMsg, RoutableMessage}
+import hu.bme.mit.abnocs.Common.{AddNOCObject, NOCMsg, RoutableMessage}
+
 import scala.util.Random
 
 /**

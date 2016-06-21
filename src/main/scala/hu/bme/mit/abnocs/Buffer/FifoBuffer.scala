@@ -1,6 +1,7 @@
 package hu.bme.mit.abnocs.Buffer
 
 import akka.actor.{ActorContext, ActorRef, Props}
+import hu.bme.mit.abnocs.Common._
 import hu.bme.mit.abnocs._
 
 /**

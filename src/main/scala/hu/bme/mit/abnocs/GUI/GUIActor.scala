@@ -2,6 +2,7 @@ package hu.bme.mit.abnocs.GUI
 
 import akka.actor.{Actor, ActorRef}
 import akka.actor.Actor.Receive
+import hu.bme.mit.abnocs.Common._
 import hu.bme.mit.abnocs.Database.DatabaseLogger
 import hu.bme.mit.abnocs._
 import hu.bme.mit.abnocs.Logger.Logger

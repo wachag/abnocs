@@ -1,6 +1,6 @@
 package hu.bme.mit.abnocs.Router
 
-import hu.bme.mit.abnocs.{Full, NOCMsg, NotFull}
+import hu.bme.mit.abnocs.Common.NOCMsg
 
 /**
   * Created by wachag on 2016.06.08..
