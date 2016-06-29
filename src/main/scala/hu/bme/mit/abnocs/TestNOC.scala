@@ -8,16 +8,16 @@ import hu.bme.mit.abnocs.Common._
 import hu.bme.mit.abnocs.Topology._
 
 class TestNOC extends Topology with RingTopologyGenerator with RingRouterGenerator with RandomCPUGenerator with FifoBufferGenerator {
-  override val ringSize: Int = 20
+  override val ringSize: Int = 10
   override val numCPUs: Int = ringSize
-  override val messageProbability: Double = 0.0001
+  override val messageProbability: Double = 0.1
   val logger:ActorSelection = context.actorSelection("/user/logger")
 
   override def receive: Actor.Receive = {
     case AddNOCObject(x) => addSimObject(x)
     case Start() =>
-      generateTopology()
       val clk = context.actorOf(Props[Simulator], name = "clock")
+      generateTopology()
       simObjects.foreach {
         (x: ActorRef) => {
           clk ! AddNOCObject(x)

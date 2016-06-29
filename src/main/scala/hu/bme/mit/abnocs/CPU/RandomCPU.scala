@@ -42,7 +42,7 @@ trait RandomMessageProcessor extends CPU {
   override def generateMessage(): Option[NOCMsg] = {
     super.generateMessage() match {
       case Some(msg) => Some(msg) /* we forward sane messages */
-      case _ => Some(RoutableMessage(cpuId, toCPU, Random.alphanumeric.take(Random.nextInt(maxLength) + 1).toString())) /* we generate a message on every cycle */
+      case _ => Some(RoutableMessage(cpuId, toCPU, Random.alphanumeric.take(Random.nextInt(maxLength) + 1).mkString)) /* we generate a message on every cycle */
     }
   }
 }

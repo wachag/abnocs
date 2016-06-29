@@ -31,21 +31,19 @@ trait FlitMessageCPU extends CPU with FlitHandler {
   override def handleMessage(m: NOCMsg): Unit = {
     m match {
       case m: RoutableMessage => super.handleMessage(m)
-      case Flit(src, dest, channel, head, tail, data) =>
+      case Flit(id,src, dest, channel, head, tail, data) =>
         if (head)
-          inComingflitMap = inComingflitMap + (src -> List(Flit(src, dest, channel, head, tail, data)))
+          inComingflitMap = inComingflitMap + (src -> List(Flit(id,src, dest, channel, head, tail, data)))
         else {
           val x: List[Flit] = inComingflitMap.get(src).map(l => {
-            l :+ Flit(src, dest, channel, head, tail, data)
+            l :+ Flit(id,src, dest, channel, head, tail, data)
           }).getOrElse(List())
           inComingflitMap = inComingflitMap.updated(src, x)
         }
         if (tail) {
           val s: String = inComingflitMap.get(src).map((l: List[Flit]) => {
             l.foldLeft("")((b, f) => {
-              f match {
-                case Flit(src_, dest_, channel_, head_, tail_, data_) => b + data_
-              }
+              b+f.data
             })
           }
           ).getOrElse("UNKNOWN FLIT")

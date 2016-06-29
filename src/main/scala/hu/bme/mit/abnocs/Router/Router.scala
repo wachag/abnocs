@@ -58,11 +58,11 @@ class Router(routerid: Int) extends NOCObject() with Deferrable {
           defer(WorkItem(x,RoutableMessage(source,dest, msg)))
         })
       }
-    case Flit(source,dest,channel,head,tail,data) =>
-      if (dest == routerid) processor ! Flit(source,dest, channel,head,tail,data)
+    case Flit(uuid,source,dest,channel,head,tail,data) =>
+      if (dest == routerid) processor ! Flit(uuid,source,dest, channel,head,tail,data)
       else {
         routeToRouter(routePath(dest)) foreach (x => {
-          defer(WorkItem(x,Flit(source,dest, channel,head,tail,data)))
+          defer(WorkItem(x,Flit(uuid,source,dest, channel,head,tail,data)))
         })
       }
     case msg@Full() => handleBuffer(msg)

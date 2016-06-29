@@ -14,11 +14,12 @@ trait Tables {
   import slick.jdbc.{GetResult => GR}
 
   /** DDL for all tables. Call .create to execute. */
-  lazy val schema: profile.SchemaDescription = Flits.schema ++ Messages.schema
+  lazy val schema: profile.SchemaDescription = Flits.schema
   @deprecated("Use .schema instead of .ddl", "3.0")
   def ddl = schema
 
   /** Entity class storing rows of table Flits
+   *  @param flitid Database column flitid SqlType(int4), Default(None)
    *  @param time Database column time SqlType(int4), Default(None)
    *  @param source Database column source SqlType(int4), Default(None)
    *  @param dest Database column dest SqlType(int4), Default(None)
@@ -27,16 +28,18 @@ trait Tables {
    *  @param tail Database column tail SqlType(bool), Default(None)
    *  @param data Database column data SqlType(bpchar), Default(None)
    *  @param sender Database column sender SqlType(varchar), Length(200,true), Default(None) */
-  case class FlitsRow(time: Option[Int] = None, source: Option[Int] = None, dest: Option[Int] = None, channel: Option[Int] = None, head: Option[Boolean] = None, tail: Option[Boolean] = None, data: Option[Char] = None, sender: Option[String] = None)
+  case class FlitsRow(flitid: Option[Int] = None, time: Option[Int] = None, source: Option[Int] = None, dest: Option[Int] = None, channel: Option[Int] = None, head: Option[Boolean] = None, tail: Option[Boolean] = None, data: Option[Char] = None, sender: Option[String] = None)
   /** GetResult implicit for fetching FlitsRow objects using plain SQL queries */
   implicit def GetResultFlitsRow(implicit e0: GR[Option[Int]], e1: GR[Option[Boolean]], e2: GR[Option[Char]], e3: GR[Option[String]]): GR[FlitsRow] = GR{
     prs => import prs._
-    FlitsRow.tupled((<<?[Int], <<?[Int], <<?[Int], <<?[Int], <<?[Boolean], <<?[Boolean], <<?[Char], <<?[String]))
+    FlitsRow.tupled((<<?[Int], <<?[Int], <<?[Int], <<?[Int], <<?[Int], <<?[Boolean], <<?[Boolean], <<?[Char], <<?[String]))
   }
   /** Table description of table flits. Objects of this class serve as prototypes for rows in queries. */
   class Flits(_tableTag: Tag) extends Table[FlitsRow](_tableTag, "flits") {
-    def * = (time, source, dest, channel, head, tail, data, sender) <> (FlitsRow.tupled, FlitsRow.unapply)
+    def * = (flitid, time, source, dest, channel, head, tail, data, sender) <> (FlitsRow.tupled, FlitsRow.unapply)
 
+    /** Database column flitid SqlType(int4), Default(None) */
+    val flitid: Rep[Option[Int]] = column[Option[Int]]("flitid", O.Default(None))
     /** Database column time SqlType(int4), Default(None) */
     val time: Rep[Option[Int]] = column[Option[Int]]("time", O.Default(None))
     /** Database column source SqlType(int4), Default(None) */
@@ -58,16 +61,16 @@ trait Tables {
   lazy val Flits = new TableQuery(tag => new Flits(tag))
 
   /** Entity class storing rows of table Messages
-   *  @param time Database column time SqlType(int4), Default(None)
-   *  @param source Database column source SqlType(int4), Default(None)
-   *  @param dest Database column dest SqlType(int4), Default(None)
-   *  @param data Database column data SqlType(varchar), Length(200,true), Default(None)
-   *  @param sender Database column sender SqlType(varchar), Length(200,true), Default(None) */
+    *  @param time Database column time SqlType(int4), Default(None)
+    *  @param source Database column source SqlType(int4), Default(None)
+    *  @param dest Database column dest SqlType(int4), Default(None)
+    *  @param data Database column data SqlType(varchar), Length(200,true), Default(None)
+    *  @param sender Database column sender SqlType(varchar), Length(200,true), Default(None) */
   case class MessagesRow(time: Option[Int] = None, source: Option[Int] = None, dest: Option[Int] = None, data: Option[String] = None, sender: Option[String] = None)
   /** GetResult implicit for fetching MessagesRow objects using plain SQL queries */
   implicit def GetResultMessagesRow(implicit e0: GR[Option[Int]], e1: GR[Option[String]]): GR[MessagesRow] = GR{
     prs => import prs._
-    MessagesRow.tupled((<<?[Int], <<?[Int], <<?[Int], <<?[String], <<?[String]))
+      MessagesRow.tupled((<<?[Int], <<?[Int], <<?[Int], <<?[String], <<?[String]))
   }
   /** Table description of table messages. Objects of this class serve as prototypes for rows in queries. */
   class Messages(_tableTag: Tag) extends Table[MessagesRow](_tableTag, "messages") {

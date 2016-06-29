@@ -58,24 +58,24 @@ object GuiTest extends SimpleSwingApplication {
     g.setStrict(false)
     g.setAutoCreate(true)
 
-    contents = new GridPanel(2, 2) {
+    contents = new GridPanel(2, 1) {
       hGap = 0
       vGap = 0
       val X = "X"
       val chart = ChartFactory.createLineChart(
-        "NoC messages", "CPU#", "Messages received",
+        "NoC messages", "CPU#", "Messages received per clock",
         data, PlotOrientation.VERTICAL,
         true, true, true)
       contents += Component.wrap(new ChartPanel(chart))
-      contents += new Label {
+/*      contents += new Label {
         text = "0"
-      }
+      }*/
 /*      contents += new Button {
         text = "Press Me!"
       }*/
       contents += Component.wrap(view)
     }
-    size = new Dimension(1024, 768)
+    size = new Dimension(1600, 800)
     val system = ActorSystem("ABNOCS")
     val logger = system.actorOf(Props(new GActor(data,g)), name = "logger")
     println(logger.path)
