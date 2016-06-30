@@ -16,11 +16,11 @@ trait FlitHandler {
       case RoutableMessage(source, dest, payload) =>
         implicit val timeout:Timeout=Timeout(100 seconds)
         val uuid:Future[Int]=(UniqueID.uniqueID ? Next()).mapTo[Int]
-        flitList = flitList :+ Flit(uuid,dest, source, 0, head = true, tail = false, payload.head)
+        flitList = flitList :+ Flit(uuid,source, dest, 0, head = true, tail = false, payload.head)
         payload.drop(1).dropRight(1).foreach(b => {
-          flitList = flitList :+ Flit(uuid,dest, source, 0, head = false, tail = false, b)
+          flitList = flitList :+ Flit(uuid,source, dest, 0, head = false, tail = false, b)
         })
-        flitList = flitList :+ Flit(uuid,dest, source, 0, head = false, tail = true, payload.last)
+        flitList = flitList :+ Flit(uuid,source, dest, 0, head = false, tail = true, payload.last)
 
     }
     flitList

@@ -1,5 +1,5 @@
 package hu.bme.mit.abnocs.GUI
-
+import scala.concurrent.duration._
 import akka.actor.{ActorSystem, Props}
 import hu.bme.mit.abnocs.Common.Start
 import hu.bme.mit.abnocs.TestNOC
@@ -81,5 +81,6 @@ object GuiTest extends SimpleSwingApplication {
     println(logger.path)
     val NOC = system.actorOf(Props[TestNOC], name = "noc1")
     NOC ! Start()
+    
   }
 }

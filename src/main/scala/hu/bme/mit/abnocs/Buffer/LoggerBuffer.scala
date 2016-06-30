@@ -9,6 +9,7 @@ import hu.bme.mit.abnocs.Logger.Logging
 trait LoggerBuffer extends Buffer with Logging{
   override def enqueue(msg: NOCMsg): Unit = {
     logger ! msg
+
     super.enqueue(msg)
   }
 

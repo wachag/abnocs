@@ -15,6 +15,8 @@ trait FifoBuffer extends Buffer with FlitHandler{
   var readerFull: Boolean = false
 
   override def enqueue(msg: NOCMsg): Unit = {
+    super.enqueue(msg)
+
     msg match {
       case msg:RoutableMessage =>
         buffer = buffer ++ routeableMessageToFlitList(msg)

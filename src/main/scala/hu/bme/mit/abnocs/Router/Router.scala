@@ -5,7 +5,7 @@ import hu.bme.mit.abnocs.Common._
 import hu.bme.mit.abnocs._
 
 import scala.collection.immutable.HashMap
-
+import scala.concurrent.ExecutionContext.Implicits.global
 trait RouterGenerator {
   val context: ActorContext
 

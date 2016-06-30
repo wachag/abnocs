@@ -56,10 +56,10 @@ trait GUIActor extends Logger {
         //      increaseValue("Flit", f.dest, 1)
         nocObjects = nocObjects.updated(f.dest,nocObjects(f.dest)+1)
       case AddEdge(s: ActorRef, e: ActorRef) =>
-      /*  g.addEdge(s.path.name +
+        g.addEdge(s.path.name +
           e.path.name,
           s.path.name,
-          e.path.name)*/
+          e.path.name)
         Unit
       case AddNOCObject(obj: ActorRef) => println(obj.path.name)
         if(obj.path.name.contains("CPU"))

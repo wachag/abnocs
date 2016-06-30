@@ -12,7 +12,6 @@ object UniqueID {
 
 class UniqueID extends Actor{
   var current=0
-  println(self.path.name+" "+self.path)
   override def receive: Receive = {
     case Next()=> sender()! current
       current=current+1

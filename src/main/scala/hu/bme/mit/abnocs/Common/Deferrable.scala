@@ -10,7 +10,8 @@ trait Deferrable extends Actor{
 
   def defer(item:WorkItem):Unit= works=works:+item
   def executeDeferred(whereTo:ActorRef):Unit={
-    works.foreach(w => {whereTo ! w})
+    works.foreach(w => {
+      whereTo ! w})
     works=List()
   }
 
